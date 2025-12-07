@@ -11,12 +11,23 @@ const POLAR_API_KEY = process.env.POLAR_API_KEY;
 const POLAR_WEBHOOK_SECRET = process.env.POLAR_WEBHOOK_SECRET;
 
 export default async function handler(req, res) {
-  // Only allow POST requests
+  // Handle GET requests for testing/debugging
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      success: true,
+      message: 'Payment verification endpoint is active',
+      endpoint: '/api/verify-payment',
+      method: 'POST',
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  // Only allow POST requests for actual webhooks
   if (req.method !== 'POST') {
     return res.status(405).json({ 
       success: false,
       error: 'Method not allowed',
-      message: 'Only POST requests are accepted' 
+      message: 'Only POST requests are accepted for webhook processing' 
     });
   }
 
